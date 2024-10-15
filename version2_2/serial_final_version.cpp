@@ -136,7 +136,7 @@ int main(int argc, char **argv)
 {
     const float epsilon = 0.03; // Incrementar epsilon para una vecindad aún más grande
     const int min_samples = 10; // Reducir min_samples para facilitar la formación de clusters
-    const long long int size = 40000;
+    const long long int size = 80000;
     const string input_file_name = to_string(size) + "_data.csv";
     const string output_file_name = to_string(size) + "_results_serial.csv";
     float **points = new float *[size];
