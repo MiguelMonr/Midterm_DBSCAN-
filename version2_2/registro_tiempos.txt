@@ -26,3 +26,10 @@ Octava iteracion: 19192338
 Novena iteracion: 19131121
 Decima iteracion: 20248813
 
+
+Para 80000 datos
+Primera iteracion: 73790965
+Segunda iteracion: 74725730
+Tercera iteracion: 73886789
+Cuarta iteracion: 73800000 
+Quinta iteracion: 
