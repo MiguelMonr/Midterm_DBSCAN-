@@ -75,7 +75,7 @@ void identify_and_count_noise_points(float **points, long long int size)
         }
     }
 
-    cout << "Total puntos de ruido: " << noise_count << endl;
+    //  cout << "Total puntos de ruido: " << noise_count << endl;
 }
 
 //* La epsilon la define el usuario
@@ -131,7 +131,7 @@ int main(int argc, char **argv)
 {
     const float epsilon = 0.03; // Incrementar epsilon para una vecindad aún más grande
     const int min_samples = 10; // Reducir min_samples para facilitar la formación de clusters
-    const long long int size = 40000;
+    const long long int size = 80000;
     const string input_file_name = to_string(size) + "_data.csv";
     const string output_file_name = to_string(size) + "_results_paralelo.csv";
     float **points = new float *[size];
@@ -153,8 +153,8 @@ int main(int argc, char **argv)
     auto end = high_resolution_clock::now();
     save_to_CSV(output_file_name, points, size);
     auto duration = duration_cast<microseconds>(end - start);
-    cout << "Tiempo de ejecución del algoritmo DBSCAN paralelo: " << duration.count() << " microsegundos" << endl;
-
+    // cout << "Tiempo de ejecución del algoritmo DBSCAN paralelo: " << duration.count() << " microsegundos" << endl;
+    cout << duration.count();
     for (long long int i = 0; i < size; i++)
     {
         delete[] points[i];

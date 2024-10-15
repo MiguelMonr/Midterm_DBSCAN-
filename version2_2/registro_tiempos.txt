@@ -1,0 +1,45 @@
+Tiempos de version paralela. 
+En todos estos experimentos se va a tomar en cuenta el valor de epsilon como 0.03 y 10 samples. 
+Todo el tiempo se va a medir en microsegundos. 
+Con 4 hilos. 
+Para 20000 datos 
+Primera iteracion: 5210082 
+Segunda iteracion: 5180960 
+Tercera iteracion: 5184998 
+Cuarta iteracion: 5180692 
+Quinta iteracion: 5256824  
+Sexta iteracion: 5202284 
+Septima iteracion: 5181077
+Octava iteracion: 5196325
+Novena iteracion: 5185755
+Decima iteracion: 5178460
+
+Para 40000
+Primera iteracion: 19349018
+Segunda iteracion: 19199120
+Tercera iteracion: 19248859
+Cuarta iteracion: 19162679
+Quinta iteracion: 19216356
+Sexta iteracion: 25026757 
+Septima iteracion: 19274128
+Octava iteracion: 19192338
+Novena iteracion: 19131121
+Decima iteracion: 20248813
+
+
+Para 80000 datos
+Primera iteracion: 73790965
+Segunda iteracion: 74725730
+Tercera iteracion: 73886789
+Cuarta iteracion: 73800000 
+Quinta iteracion: 73860544 
+Sexta iteracion: 73498157
+Septima iteracion: 73830699
+Octava iteracion: 73708312
+Novena iteracion: 73723083
+Decima iteracion: 73504426
+
+Para 120000 datos 
+Primera iteracion: 163471719
+Segunda iteracion: 164289736
+Tercera iteracion: 164652066
