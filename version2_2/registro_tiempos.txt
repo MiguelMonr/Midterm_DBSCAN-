@@ -32,4 +32,9 @@ Primera iteracion: 73790965
 Segunda iteracion: 74725730
 Tercera iteracion: 73886789
 Cuarta iteracion: 73800000 
-Quinta iteracion: 
+Quinta iteracion: 73860544 
+Sexta iteracion: 73498157
+Septima iteracion: 73830699
+Octava iteracion: 73708312
+Novena iteracion: 73723083
+Decima iteracion: 73504426
