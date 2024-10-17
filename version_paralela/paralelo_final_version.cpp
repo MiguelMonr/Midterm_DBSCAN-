@@ -9,35 +9,33 @@
 using namespace std;
 using namespace std::chrono;
 
-double calculate_distance(float *point1, float *point2)
+double distance(float *point1, float *point2)
 {
     return sqrt(pow(point1[0] - point2[0], 2) + pow(point1[1] - point2[1], 2));
 }
 
-void regionQuery(float **points, long long int size, long long int point_idx, float epsilon, vector<long long int> &neighbors)
+void find_region(float **points, long long int size, long long int point_idx, float epsilon, vector<long long int> &neighbors)
 {
-    for (long long int i = 0; i < size; i++)
+#pragma omp parallel for
+    for (int i = 0; i < size; i++)
     {
         if (i != point_idx)
         {
-            float dist = calculate_distance(points[point_idx], points[i]);
+            float dist = distance(points[point_idx], points[i]);
             if (dist <= epsilon)
             {
+#pragma omp critical
                 neighbors.push_back(i);
             }
         }
     }
-    // Depuración: Mostrar cuántos vecinos se encontraron para cada punto
-    // cout << "Punto " << point_idx << " encontró " << neighbors.size() << " vecinos dentro de epsilon.\n";
 }
 
+//! Idealmente no paralelices esto
 void expandCluster(float **points, long long int size, long long int point_idx, int clusterID, float epsilon, int min_samples)
 {
     vector<long long int> neighbors;
-    regionQuery(points, size, point_idx, epsilon, neighbors);
-
-    // Depuración: Mostrar cuántos vecinos se encontraron antes de decidir si es ruido
-    // cout << "Punto " << point_idx << " tiene " << neighbors.size() << " vecinos.\n";
+    find_region(points, size, point_idx, epsilon, neighbors);
 
     if (neighbors.size() < min_samples)
     {
@@ -51,10 +49,10 @@ void expandCluster(float **points, long long int size, long long int point_idx, 
     {
         long long int neighbor_idx = neighbors[i];
         if (points[neighbor_idx][2] == -1 || points[neighbor_idx][2] == 0)
-        { // Unvisited or noise
+        {
             points[neighbor_idx][2] = clusterID;
             vector<long long int> neighbor_neighbors;
-            regionQuery(points, size, neighbor_idx, epsilon, neighbor_neighbors);
+            find_region(points, size, neighbor_idx, epsilon, neighbor_neighbors);
             if (neighbor_neighbors.size() >= min_samples)
             {
                 neighbors.insert(neighbors.end(), neighbor_neighbors.begin(), neighbor_neighbors.end());
@@ -63,23 +61,21 @@ void expandCluster(float **points, long long int size, long long int point_idx, 
     }
 }
 
-void identify_and_count_noise_points(float **points, long long int size)
+void identify_noise_points(float **points, long long int size)
 {
     int noise_count = 0; // Contador de puntos de ruido
-
+#pragma omp parallel for
     for (long long int i = 0; i < size; i++)
     {
         // Revisar si el punto fue etiquetado como ruido (etiqueta 0)
         if (points[i][2] == 0)
         {
+#pragma omp atomic
             noise_count++;
-            // Imprimir coordenadas de los puntos de ruido (opcional)
-            // cout << "Punto de ruido: (" << points[i][0] << ", " << points[i][1] << ")\n";
         }
     }
 
-    // Imprimir el número total de puntos de ruido
-    cout << "Número total de puntos de ruido: " << noise_count << endl;
+    //  cout << "Total puntos de ruido: " << noise_count << endl;
 }
 
 //* La epsilon la define el usuario
@@ -94,7 +90,7 @@ void dbscan(float **points, long long int size, float epsilon, int min_samples)
             clusterID++;
         }
     }
-    identify_and_count_noise_points(points, size);
+    identify_noise_points(points, size);
 }
 
 void load_CSV(string file_name, float **points, long long int size)
@@ -111,7 +107,6 @@ void load_CSV(string file_name, float **points, long long int size)
         streamsize row_size = 12;
         in.read(line, row_size);
         string row = line;
-        // cout << stof(row.substr(0, 5)) << " - " << stof(row.substr(6, 5)) << "\n";
         points[point_number][0] = stof(row.substr(0, 5));
         points[point_number][1] = stof(row.substr(6, 5));
         points[point_number][2] = -1; // Inicializar como no visitado
@@ -138,11 +133,12 @@ int main(int argc, char **argv)
     const int min_samples = 10; // Reducir min_samples para facilitar la formación de clusters
     const long long int size = 80000;
     const string input_file_name = to_string(size) + "_data.csv";
-    const string output_file_name = to_string(size) + "_results_serial.csv";
+    const string output_file_name = to_string(size) + "_results_paralelo.csv";
     float **points = new float *[size];
 
-    // TODO: Preguntar octavio para que sirve esto
-    // Primera prueba
+    // Configurar el uso de 4 hilos
+    omp_set_num_threads(4);
+
     for (long long int i = 0; i < size; i++)
     {
         points[i] = new float[3]{0.0, 0.0, -1}; // Inicializar como no visitado
@@ -152,13 +148,13 @@ int main(int argc, char **argv)
     }
 
     load_CSV(input_file_name, points, size);
-    int tiempo_ejecucion = 0;
     auto start = high_resolution_clock::now();
     dbscan(points, size, epsilon, min_samples);
     auto end = high_resolution_clock::now();
     save_to_CSV(output_file_name, points, size);
     auto duration = duration_cast<microseconds>(end - start);
-    cout << "Tiempo de ejecución del algoritmo DBSCAN serial: " << duration.count() << " microsegundos" << endl;
+    // cout << "Tiempo de ejecución del algoritmo DBSCAN paralelo: " << duration.count() << " microsegundos" << endl;
+    cout << duration.count();
     for (long long int i = 0; i < size; i++)
     {
         delete[] points[i];
