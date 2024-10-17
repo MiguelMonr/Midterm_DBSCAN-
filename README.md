@@ -24,3 +24,6 @@ Cada conjunto fue ejecutado 10 veces y se tomo el promedio total.
 	- A continuación se mencionan algunas librerías utilizadas: 
 		- omp.h, iostream, chrono
 - 'serial_final_version.cpp': archivo C++ donde esta el código con la version serial del código
+
+## Resultados
+![speedup](./images/WhatsApp Image 2024-10-17 at 13.27.59.jpeg)
