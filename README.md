@@ -26,4 +26,11 @@ Cada conjunto fue ejecutado 10 veces y se tomo el promedio total.
 - 'serial_final_version.cpp': archivo C++ donde esta el código con la version serial del código
 
 ## Resultados
-![speedup](./images/WhatsApp Image 2024-10-17 at 13.27.59.jpeg)
+Speed up
+![speedup](./images/WhatsApp%20Image%202024-10-17%20at%2013.27.59.jpeg)
+
+Tiempos de hilos
+![hilos](./images/WhatsApp%20Image%202024-10-17%20at%2013.31.12.jpeg)
+
+Speed ups promedios
+![speedup 2](./images/WhatsApp%20Image%202024-10-17%20at%2013.53.33.jpeg)
